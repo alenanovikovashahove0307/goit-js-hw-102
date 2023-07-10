@@ -1,4 +1,4 @@
-import { fetchBreeds, fetchCatByBreed, displayCatInfo } from './cat-api.js';
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 // Завантажувач
@@ -8,7 +8,6 @@ const loaderElement = document.querySelector('p.loader');
 const errorElement = document.querySelector('p.error');
 const breedSelect = document.querySelector('select.breed-select');
 const catInfoContainer = document.querySelector('div.cat-info');
-const errorNotification = Notiflix.Notify.failure(errorElement.textContent);
 errorElement.style.display = 'none';
 breedSelect.style.display = 'none';
 new SlimSelect({
@@ -22,67 +21,62 @@ fetchBreeds()
       option.value = breed.id;
       option.textContent = breed.name;
       breedSelect.appendChild(option);
-    });
+    })
     
     breedSelect.style.display = 'block';
-    // Прослуховування події зміни вибраної породи
-    breedSelect.addEventListener('change', event => {
-      const selectedBreedId = event.target.value;
-
-      // Показати завантажувач, приховати select та div.cat-info
-      loaderElement.style.display = 'block';
-      breedSelect.style.display = 'none';
-      catInfoContainer.style.display = 'none';
-
-      fetchCatByBreed(selectedBreedId)
-        .then(catData => {
-          // Приховати завантажувач, показати div.cat-info
-          loaderElement.style.display = 'none';
-          catInfoContainer.style.display = 'block';
-
-          displayCatInfo(catData);
-        })
-        .catch(error => {
-          // Приховати завантажувач, показати помилку
-          loaderElement.style.display = 'none';
-          errorElement.style.display = 'block';
-
-          console.error('Failed to fetch cat by breed:', error);
-        });
-    });
+    
   })
   .catch(error => {
     // Приховати завантажувач, показати помилку
     loaderElement.style.display = 'none';
     errorElement.style.display = 'block';
-    errorNotification.show();
-    console.error('Failed to fetch breeds:', error);
+    Notiflix.Notify.info('Failed to fetch breeds:', error);
   })
   .finally(() => {
     loaderElement.style.display = 'none';
+    errorElement.style.display = 'none';
   });
+  function displayCatInfo(catData) {
+  const catInfoContainer = document.querySelector('div.cat-info');
+  catInfoContainer.innerHTML = '';
+
+  const image = document.createElement('img');
+  image.src = catData[0].url;
+  catInfoContainer.appendChild(image);
+
+  const breedName = document.createElement('h3');
+  breedName.textContent = catData[0].breeds[0].name;
+  catInfoContainer.appendChild(breedName);
+
+  const description = document.createElement('p');
+  description.textContent = catData[0].breeds[0].description;
+  catInfoContainer.appendChild(description);
+
+  const temperament = document.createElement('p');
+  temperament.textContent = `Temperament: ${catData[0].breeds[0].temperament}`;
+  catInfoContainer.appendChild(temperament);
+};
 
 breedSelect.addEventListener('change', event => {
   const selectedBreedId = event.target.value;
 
   // Показати завантажувач, приховати select та div.cat-info
   loaderElement.style.display = 'block';
-  breedSelect.style.display = 'none';
   catInfoContainer.style.display = 'none';
+  errorElement.style.display = 'none';
 
   fetchCatByBreed(selectedBreedId)
     .then(catData => {
       // Приховати завантажувач, показати div.cat-info
       loaderElement.style.display = 'none';
       catInfoContainer.style.display = 'block';
-
+      breedSelect.style.display = 'block';
+      errorElement.style.display = 'none';
       displayCatInfo(catData);
     })
     .catch(error => {
       // Приховати завантажувач, показати помилку
-      
       errorElement.style.display = 'block';
-      errorNotification.show();
-      console.error('Failed to fetch cat by breed:', error);
-    })
+      Notiflix.Notify.info('Failed to fetch breeds:', error);
+    });
 });
