@@ -26,3 +26,15 @@
   background-size: cover;
   background-position: center;
 }
+/* Стилі для картинки зліва */
+.cat-info img {
+  float: left;
+  margin-right: 10px;
+}
+
+/* Стилі для інформації зправа */
+.cat-info h3,
+.cat-info p {
+  margin-top: 0;
+}
+

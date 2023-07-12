@@ -10,9 +10,7 @@ const breedSelect = document.querySelector('select.breed-select');
 const catInfoContainer = document.querySelector('div.cat-info');
 errorElement.style.display = 'none';
 breedSelect.style.display = 'none';
-new SlimSelect({
-  select: '#breedSelect',
-});
+
 // Завантаження колекції порід та заповнення select.breed-select
 fetchBreeds()
   .then(breeds => {
@@ -24,7 +22,10 @@ fetchBreeds()
     })
     
     breedSelect.style.display = 'block';
-    
+    new SlimSelect({
+      select: '#breedSelect',
+    });
+    Loading.hourglass();
   })
   .catch(error => {
     // Приховати завантажувач, показати помилку
