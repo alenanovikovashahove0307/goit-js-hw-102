@@ -25,7 +25,7 @@ fetchBreeds()
     new SlimSelect({
       select: '#breedSelect',
     });
-    // showLoader();
+    
   })
   .catch(error => {
     // Приховати завантажувач, показати помилку
@@ -36,6 +36,7 @@ fetchBreeds()
   .finally(() => {
     loaderElement.style.display = 'none';
     errorElement.style.display = 'none';
+    hideLoader();
   });
   function displayCatInfo(catData) {
   const catInfoContainer = document.querySelector('div.cat-info');
@@ -74,12 +75,14 @@ breedSelect.addEventListener('change', event => {
       breedSelect.style.display = 'block';
       errorElement.style.display = 'none';
       displayCatInfo(catData);
+      hideLoader();
     })
     .catch(error => {
       // Приховати завантажувач, показати помилку
       errorElement.style.display = 'block';
       Notiflix.Notify.info('Failed to fetch breeds:', error);
     });
+    
 });
 function showLoader() {
   Notiflix.Loading.standard('Searching images...');
