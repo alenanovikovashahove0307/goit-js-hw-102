@@ -1,2 +1,14 @@
 @import './common';
 @import './example';
+/* Стилі для картинки зліва */
+.cat-info img {
+  width: 500px;
+  float: left;
+  margin-right: 10px;
+}
+
+/* Стилі для інформації зправа */
+.cat-info h3,
+.cat-info p {
+  margin-top: 0;
+}
